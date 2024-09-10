@@ -1,0 +1,43 @@
+﻿@using MVVMDemo.Pages.Employees.Dtos
+@using System.Collections.ObjectModel
+@using MVVMDemo.Pages.Employees.ViewModels
+
+@inject EmployeeActionsViewModel ActionViewModel
+@inject AppState AppState
+
+@attribute [Route("/employees")]
+<h3>Employees</h3>
+
+<EmployeeList Employees="Employees" 
+    CreateEmployeeAction="() => ActionViewModel.CreateEmployeeAction?.Invoke()"
+    UpdateEmployeeAction="(employee) => ActionViewModel.UpdateEmployeeAction?.Invoke(employee)"></EmployeeList>
+
+@code {
+    public ObservableCollection<Employee> Employees { get; set; } = new ObservableCollection<Employee>();
+
+    protected override Task OnInitializedAsync()
+    {
+        var places = new List<string>
+        {            "Davao",
+
+            "Manila",
+            "Malita",
+            "Gensan",
+            "Cebu",
+            "Batangas"
+        };
+        var random = new Random();
+
+        for (int i = 0; i < 10; i++)
+        {
+            Employees.Add(new Employee
+                {
+                    Name = $"Employee {i + 1}",
+                    Address = $"{places[random.Next(0, 5)]}",
+                    Birthdate = DateTime.Now
+                });
+        }
+
+        return base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,32 @@
+﻿@using MVVMDemo.Pages.Employees.Dtos
+@using MVVMDemo.Pages.Employees.ViewModels
+@using MudBlazor
+
+@attribute [Route("/employees/create")]
+@attribute [Route("/employees/update")]
+
+@inject AppState AppState
+@inject EmployeeFormViewModel EmployeeViewModel
+@inject NavigationManager NavigationManager
+
+<h3>Employee</h3>
+
+<MudTextField @bind-Value="EmployeeViewModel.Employee.Name" Label="Name" Variant="Variant.Outlined"></MudTextField>
+<MudTextField @bind-Value="EmployeeViewModel.Employee.Birthdate" Label="Birthdate" Variant="Variant.Outlined"></MudTextField>
+<MudTextField @bind-Value="EmployeeViewModel.Employee.Address" Label="Address" Variant="Variant.Outlined"></MudTextField>
+
+<div class="d-flex flex-row">
+    <MudButton Style="margin-right: 4px;" @onclick="SaveEmployee">SAVE</MudButton>
+    <MudButton>CANCEL</MudButton>
+</div>
+
+
+@code {
+
+    private void SaveEmployee()
+    {
+        EmployeeViewModel.SaveEmployee();
+        AppState.NotifyChanges();
+        NavigationManager.NavigateTo("/employees");
+    }
+}

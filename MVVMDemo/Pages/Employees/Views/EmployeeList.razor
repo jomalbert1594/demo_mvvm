@@ -1,0 +1,45 @@
+﻿@using MVVMDemo.Pages.Employees.Dtos
+@using MVVMDemo.Pages.Employees.ViewModels
+@using MudBlazor
+@using System.Collections.ObjectModel
+
+@inject AppState AppState
+@inject EmployeeListViewModel EmployeeListViewModel
+
+<MudButton @onclick="() => CreateEmployeeAction?.Invoke()">CREATE EMPLOYEE</MudButton>
+
+<MudBlazor.MudDataGrid T="Employee" Items="EmployeeListViewModel.Employees">
+    <Columns>
+        <PropertyColumn Property="x => x.Name" Title="Name"></PropertyColumn>
+        <PropertyColumn Property="x => x.Birthdate" Title="Birthdate"></PropertyColumn>
+        <PropertyColumn Property="x => x.Address" Title="Address"></PropertyColumn>
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudButton Size="@Size.Small" Variant="@Variant.Filled" @onclick="() => UpdateEmployeeAction.Invoke(context.Item)">UPDATE</MudButton>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudBlazor.MudDataGrid>
+
+@code {
+    [Parameter]
+    public Action CreateEmployeeAction { get; set; }
+
+    [Parameter]
+    public Action<Employee> UpdateEmployeeAction { get; set; }
+
+    [Parameter]
+    public ObservableCollection<Employee> Employees { get; set; } = new ObservableCollection<Employee>();
+
+    protected override Task OnInitializedAsync()
+    {
+        AppState.OnChange += StateHasChanged;
+
+        if (EmployeeListViewModel.Employees.Count <= 0)
+            EmployeeListViewModel.Employees = Employees;
+
+        return base.OnInitializedAsync();
+    }
+}
